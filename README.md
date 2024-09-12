@@ -64,8 +64,9 @@ Q: How can I tell which files are infected?
 
 A: If you open an infected save file (ends in .json) in a text editor such as
 Notepad, you can search (ctrl-F usually) for "glitch" or "WebRequest" or
-"tcejbo gninwapS and see the condensed confusing blob of Lua code attached to
-all sorts of objects.
+"tcejbo gninwapS" and see the condensed confusing blob of Lua code attached to
+all sorts of objects. If you've already run my script, you'd instead look at
+the .backup file it renamed the old .json file to.
 
 Q: Will this mess up existing good Lua scripts?
 
