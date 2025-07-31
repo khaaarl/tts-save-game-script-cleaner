@@ -96,7 +96,6 @@ import sys
 import time
 from time import gmtime, strftime
 
-
 # If your Tabletop Simulator data directory is in some alternative location,
 # paste it in the quotes below.
 TTS_DIR_OVERRIDE = r""
@@ -150,7 +149,9 @@ def cleanse_script(script):
     l = script.split(" " * 150)
     # exclude any parts that match the evil regexp, rejoin legit stuff,
     # clear outer whitespace.
-    return (" " * 150).join([s for s in l if not evil_url_re.search(s)]).strip()
+    return (
+        (" " * 150).join([s for s in l if not evil_url_re.search(s)]).strip()
+    )
 
 
 def cleanse_obj(obj):
