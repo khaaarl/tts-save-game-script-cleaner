@@ -21,11 +21,12 @@ Q: What is the "tcejbo gninwapS" pseudo-virus?
 
 A: It is a TTS lua script that copies itself to every object it can find,
 including dice, hands, cards, tables, all sorts of things. It attempts to
-contact a website, presumably to download malicious code to execute, but that
-website is down right now. If it were to be up again, there could be some
-serious security concerns. However, even without those security concerns, the
-script itself can sometimes introduce lag/stuttering in games, especially over
-time and/or when spawning lots of objects such as the piles of dice in wargames.
+contact a website, presumably to download malicious code to execute. As of July 2025,
+[glitch.com](https://glitch.com/), the service that formerly hosted the malicious website, has shut down.
+This means it currently not a security concern, and will likely not become one within the foreseeable future.
+However, even without those security concerns, the script itself can sometimes
+introduce lag/stuttering in games, especially overtime and/or when spawning lots of 
+objects such as the piles of dice in wargames.
 Note that if someone brings in a single model with the virus into a multiplayer
 game, every other object will become infected. So, everyone in your play group
 should get checked.
