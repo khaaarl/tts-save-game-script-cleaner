@@ -110,7 +110,16 @@ def tts_default_locations():
                 ".local",
                 "share",
                 "Tabletop Simulator",
-            )
+            ),
+            os.path.join(
+                str(pathlib.Path.home()),
+                "snap",
+                "steam",
+                "common",
+                ".local",
+                "share",
+                "Tabletop Simulator",
+            ),
         ]
     elif sys.platform == "darwin":  # mac osx
         return [
