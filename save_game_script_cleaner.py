@@ -264,6 +264,7 @@ def cleanse_thing(path, pool=None):
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     things = list(sys.argv[1:])
     if not things:
         if TTS_DIR_OVERRIDE:

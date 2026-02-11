@@ -1,0 +1,92 @@
+name: Build Executables
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: "Create a GitHub Release with the built executables"
+        required: false
+        type: boolean
+        default: false
+      release_tag:
+        description: "Release tag (required if creating release, e.g. v1.0.0)"
+        required: false
+        type: string
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact-name: linux-x86_64
+          - os: macos-latest
+            artifact-name: mac-arm64
+          - os: windows-latest
+            artifact-name: windows-x86_64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create venv and install dependencies
+        shell: bash
+        run: |
+          python -m venv venv
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            venv/Scripts/pip install -r requirements-dev.txt
+          else
+            venv/bin/pip install -r requirements-dev.txt
+          fi
+
+      - name: Run tests
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            venv/Scripts/python -m unittest save_game_script_cleaner_test.py
+          else
+            venv/bin/python -m unittest save_game_script_cleaner_test.py
+          fi
+
+      - name: Package executable
+        run: python scripts/package_executable.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: save_game_script_cleaner-${{ matrix.artifact-name }}
+          path: dist/
+
+  release:
+    if: ${{ inputs.create_release }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -lh artifacts/
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ inputs.release_tag }}" \
+            --repo "${{ github.repository }}" \
+            --title "Save Game Script Cleaner ${{ inputs.release_tag }}" \
+            --generate-notes \
+            artifacts/save_game_script_cleaner-*
