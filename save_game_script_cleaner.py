@@ -302,8 +302,10 @@ if __name__ == "__main__":
             )
     with multiprocessing.Pool() as pool:
         for item in things:
+            print("")
             print(strftime("%Y-%m-%dT%H:%M:%SZ", gmtime()), "Examining", item)
             cleanse_thing(item, pool=pool)
+    print("")
     print(
         strftime("%Y-%m-%dT%H:%M:%SZ", gmtime()), "Done. Press enter to exit."
     )
