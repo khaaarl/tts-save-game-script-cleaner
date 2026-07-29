@@ -87,6 +87,7 @@ A: Ask in the suspicious-or-malicious-mods-and-scripts channel on the TTS
 Warhammer 40k discord:
 https://discord.com/channels/282027517773217793/1123842606883946588
 """
+
 import json
 import multiprocessing
 import os
@@ -142,11 +143,33 @@ def tts_default_locations():
                 "My Games",
                 "Tabletop Simulator",
             ),
+            find_win_steam_tts_dir(),
         ]
     else:
         return [
             f"couldn't match platform {sys.platform}, so don't know save game location"
         ]
+
+
+def find_win_steam_tts_dir(app_id="286160"):
+    import winreg  # windows only
+
+    steam, _ = winreg.QueryValueEx(
+        winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Valve\Steam"),
+        "SteamPath",
+    )
+    vdf_text = open(
+        f"{steam}/steamapps/libraryfolders.vdf", encoding="utf-8"
+    ).read()
+    libs = [steam] + re.findall(r'"path"\s+"([^"]+)"', vdf_text)
+
+    for lib in libs:
+        manifest_path = f"{lib}/steamapps/appmanifest_{app_id}.acf"
+        if os.path.isfile(manifest_path):
+            manifest = open(manifest_path, encoding="utf-8").read()
+            name = re.search(r'"installdir"\s+"([^"]+)"', manifest).group(1)
+            return os.path.normpath(f"{lib}/steamapps/common/{name}")
+    return None
 
 
 evil_url_re = re.compile(r"obje\.glitch\.me")
